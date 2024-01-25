@@ -1,7 +1,64 @@
 
-
+<div style="display: flex; 
+justify-content: center; 
+align-items: center; 
+width: 100vw; 
+height: 100vh; ">
+<div id="ios-version" style="padding-top: 2.5rem;
+padding-bottom: 2.5rem; 
+padding-left: 5rem;
+padding-right: 5rem; 
+border-width: 1px; 
+border-color: #1E3A8A; 
+font-size: 1.5rem;
+line-height: 2rem; 
+color: #000000; 
+color: #1E3A8A; 
+background-color: #BFDBFE;  " onclick=iOSversion()>
+IOS Version
+</div>
+<div style="padding-top: 2.5rem;
+padding-bottom: 2.5rem; 
+padding-left: 5rem;
+padding-right: 5rem; 
+border-width: 1px; 
+border-color: #064E3B; 
+font-size: 1.5rem;
+line-height: 2rem; 
+color: #000000; 
+color: #064E3B; 
+background-color: #A7F3D0; " onclick=subscribe()>
+Subscribe
+</div>
+</div>
 <script>
-    var vapidPublicKey = new Uint8Array(<%= Base64.urlsafe_decode64(Rails.application.credentials.dig(:webpush, :public_key)).bytes %>);
+    async function iOSversion() {
+        let iosVersion
+        function checkVersion(){
+             var agent = window.navigator.userAgent,
+                start = agent.indexOf(`OS ` );
+                if( ( agent.indexOf( `iPhone`) > -1 || agent.indexOf( `iPad`) > -1 ) && start > -1 ){
+                    return window.Number( agent.substr( start + 3, 3 ).replace( `_`, `.`) );
+                }
+                return "Not An Ios Devise";
+        //     var iOS = !window.MSStream && /iPad|iPhone|iPod/.test(navigator.userAgent); // fails on iPad iOS 13
+        //     if (iOS) { // <-- Use the one here above
+        //     if (window.indexedDB) { return 'iOS 8 and up'; }
+        //     if (window.SpeechSynthesisUtterance) { return 'iOS 7'; }
+        //     if (window.webkitAudioContext) { return 'iOS 6'; }
+        //     if (window.matchMedia) { return 'iOS 5'; }
+        //     if (window.history && 'pushState' in window.history) { return 'iOS 4'; }
+        //     return 'iOS 3 or earlier';
+        // }
+        // return 'Not an iOS device';
+        }
+
+        iosVersion = await checkVersion()
+        console.log(iosVersion)
+        window.document.getElementById('ios-version').innerHTML = iosVersion
+    }
+    function subscribe(){
+        var vapidPublicKey = new Uint8Array(<%= Base64.urlsafe_decode64(Rails.application.credentials.dig(:webpush, :public_key)).bytes %>);
     if (navigator.serviceWorker){
         navigator.serviceWorker.register('/service_worker.js')
         .then(function(reg){
@@ -11,6 +68,7 @@
                     userVisibleOnly: true,
                     applicationServerKey: vapidPublicKey
                 }).then(async function(sub){
+                    console.log({sub})
                     const data = await fetch('/notifications',{
                         method: 'POST',
                         headers:{
@@ -24,10 +82,11 @@
             console.log("Service Worker Ready")
         })
 
-
     }else{
         console.log("Service Worker Not Supported")
     }
+    }
+    
 
  
   </script>

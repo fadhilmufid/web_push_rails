@@ -1,1 +1,16 @@
-{}
+{
+  "name": "Sharcle",
+  "short_name": "Sharcle",
+  "start_url": "/notifications",
+  "icons": [
+    {
+      "src": "/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ],
+  "display": "standalone",
+  "background_color": "fff",
+  "theme_color": "#000",
+  "scope": "/"
+}

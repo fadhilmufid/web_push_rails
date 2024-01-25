@@ -8,5 +8,7 @@ self.addEventListener("push", (event) => {
   console.log(event);
   // Get the push message
   // Display a notification
-  event.waitUntil(self.registration.showNotification(event.message));
+  event.waitUntil(
+    self.registration.showNotification(event.data.text(), { body: "baru" })
+  );
 });

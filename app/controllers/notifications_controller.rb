@@ -5,11 +5,14 @@ class NotificationsController < ApplicationController
     end
 
     def create
-        notification = WebpushNotification.new(
-            endpoint: params[:endpoint],
-            auth_key: params[:keys][:auth],
-            p256dh_key:  params[:keys][:p256dh]
-        )
+        notification = WebpushNotification.find_by(auth_key: params[:keys][:auth])
+        if !notification
+            notification = WebpushNotification.new(
+                endpoint: params[:endpoint],
+                auth_key: params[:keys][:auth],
+                p256dh_key:  params[:keys][:p256dh]
+            )
+        end
 
         if notification.save
             render json: notification

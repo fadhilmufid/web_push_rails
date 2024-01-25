@@ -1,8 +1,8 @@
 class WebpushNotification < ApplicationRecord
-    after_create :send_webpush 
-    def send_webpush
+    # after_create :send_webpush 
+    def send_webpush(push_message)
         WebPush.payload_send(
-            message: "Push Bro",
+            message: push_message,
             endpoint: endpoint,
             p256dh: p256dh_key,
             auth: auth_key,
